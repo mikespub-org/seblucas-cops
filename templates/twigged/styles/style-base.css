@@ -1,3 +1,42 @@
 .panel-body { padding: 5px; }
 
 .bottomright {position:absolute; bottom:0;  margin-bottom:25px; right: 20px;}
+
+.download.bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.download.bottom .btn-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    margin: 0;
+}
+
+.shelf-toolbar.btn-toolbar {
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.shelf-toolbar .form-inline {
+    display: inline-block;
+    margin: 0;
+}
+
+.shelf-toolbar .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    max-width: 200px;
+    margin: 0;
+}
+
+.shelf-toolbar .btn-group {
+    margin: 0;
+}

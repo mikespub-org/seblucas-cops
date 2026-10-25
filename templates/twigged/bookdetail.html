@@ -16,37 +16,50 @@
 </div>
 
 <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 text-xs-center text-sm-left ">
-    {% for data in it.book.datas %}
-    <div class="btn-group">
-        <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}" class="btn btn-primary" role="button" data-link="direct"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
-        {% if data.qrcode == 1 %}
-        <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{data.url}}'); return false;">
-        <span class="glyphicon glyphicon-qrcode"></span></a>
-        {% endif %}
-        {% if data.mail == 1 %}
-        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, '{{data.id}}'); return false;">
-        <span class="glyphicon glyphicon-envelope"></span></a>
-        {% endif %}
-        {% if data.readerUrl != "" %}
-        <a title="Reader // {{data.format}}" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
-        <span class="glyphicon glyphicon-eye-open"></span></a>
+    <div class="btn-toolbar" role="toolbar" aria-label="{{ it.c.i18n.bookActionsTitle|default('Book actions') }}">
+        {% for data in it.book.datas %}
+        <div class="btn-group">
+            <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}" class="btn btn-primary" role="button" data-link="direct"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
+            {% if data.qrcode == 1 %}
+            <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{data.url}}'); return false;">
+            <span class="glyphicon glyphicon-qrcode"></span></a>
+            {% endif %}
+            {% if data.mail == 1 %}
+            <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, '{{data.id}}'); return false;">
+            <span class="glyphicon glyphicon-envelope"></span></a>
+            {% endif %}
+            {% if data.readerUrl != "" %}
+            <a title="Reader // {{data.format}}" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
+            <span class="glyphicon glyphicon-eye-open"></span></a>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% if it.c.config.use_server_shelves %}
+        <form method="post" action="{{it.book.toggleurl}}" class="server-shelf-toggle-form">
+            <input type="hidden" name="id" value="{{it.book.id}}" />
+            <input type="hidden" name="db" value="{{it.book.databaseId}}" />
+            <input type="hidden" name="shelf" value="{{it.book.shelfname}}" />
+            <input type="hidden" name="return" value="{{it.book.returnurl}}" />
+            <button type="submit" class="btn {% if it.book.inServerShelf %}btn-danger{% else %}btn-default{% endif %} server-shelf-toggle" aria-pressed="{% if it.book.inServerShelf %}true{% else %}false{% endif %}" title="{% if it.book.inServerShelf %}{{it.c.i18n.shelfRemoveTitle|default('Remove from Shelf')}}{% else %}{{it.c.i18n.shelfAddTitle|default('Add to Shelf')}}{% endif %}">
+                <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                <span class="sr-only">{% if it.book.inServerShelf %}{{it.c.i18n.shelfRemoveTitle|default('Remove from Shelf')}}{% else %}{{it.c.i18n.shelfAddTitle|default('Add to Shelf')}}{% endif %}</span>
+            </button>
+        </form>
+        {% elseif it.c.config.use_client_shelves %}
+        <div class="btn-group">
+            <button class="btn btn-default shelf-toggle-btn"
+                    data-book-db="{{it.databaseId}}"
+                    data-book-id="{{it.book.id}}"
+                    data-book-title="{{it.title|escape}}"
+                    data-book-author="{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}{{author.name|escape}}{% endfor %}"
+                    data-book-thumbnail="{{it.book.thumbnailurl}}"
+                    data-book-detailurl="{{it.book.detailurl}}"
+                    title="{{it.c.i18n.shelfAddTitle|default('Add to Shelf')}}">
+                <span class="glyphicon glyphicon-bookmark"></span>
+            </button>
+        </div>
         {% endif %}
     </div>
-    {% endfor %}
-    {% if it.c.config.use_client_shelves %}
-    <div class="btn-group">
-        <button class="btn btn-default shelf-toggle-btn"
-                data-book-db="{{it.databaseId}}"
-                data-book-id="{{it.book.id}}"
-                data-book-title="{{it.title|escape}}"
-                data-book-author="{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}{{author.name|escape}}{% endfor %}"
-                data-book-thumbnail="{{it.book.thumbnailurl}}"
-                data-book-detailurl="{{it.book.detailurl}}"
-                title="{{it.c.i18n.shelfAddTitle|default('Add to Shelf')}}">
-            <span class="glyphicon glyphicon-bookmark"></span>
-        </button>
-    </div>
-    {% endif %}
 </div>
 
 

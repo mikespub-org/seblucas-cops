@@ -1,10 +1,165 @@
 {# shelves.html is used for it.page == "shelves" #}
 {% extends 'base.html' %}
 
+{% block download %}
+  {% if it.download %}
+    {% for link in it.download %}
+    <a class="navbar-brand" href="{{link.url}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{link.format}}">
+      <span class="glyphicon glyphicon-download"></span>
+    </a>
+    {% endfor %}
+  {% endif %}
+{% endblock download %}
+
+{% block sortlinks %}
+<!-- show sort options -->
+<ul id="sortlinks" class="nav navbar-nav">
+  {% if it.sortoptions.title is defined %}
+  <li{% if it.sortedBy == "title" %} class="active"{% endif %}><a href="{{str_format(it.sorturl, "title")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.title}}">
+    <span class="glyphicon glyphicon-font"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.author is defined %}
+  <li{% if it.sortedBy == "author" %} class="active"{% endif %}><a href="{{str_format(it.sorturl, "author")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.author}}">
+    <span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.timestamp is defined %}
+  <li{% if it.sortedBy == "timestamp" %} class="active"{% endif %}><a href="{{str_format(it.sorturl, "timestamp")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.timestamp}}">
+    <span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+  </a></li>
+  {% endif %}
+</ul>
+{% endblock sortlinks %}
+
 {% block main %}
 <div id="main" class="container-fluid">
+    {% if it.c.config.use_server_shelves %}
+    <section id="server-shelves" aria-labelledby="server-shelves-title">
+        <h1 id="server-shelves-title">{{it.title|escape}}</h1>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="shelf-toolbar btn-toolbar" role="toolbar" aria-label="{{ it.c.i18n.shelfActionsTitle|default('Shelf actions') }}">
+                    <!-- Shelf switcher -->
+                    <div class="btn-group mr-2">
+                        <form method="post" action="{{it.c.shelfActions.switch}}" class="form-inline">
+                            <label for="server-shelf-select" class="sr-only">{{it.c.i18n.shelvesTitle|default('Shelves')}}</label>
+                            <select class="form-control" id="server-shelf-select" name="shelf">
+                                {% for shelfName, count in it.shelves %}
+                                <option value="{{shelfName}}" {% if shelfName == it.activeShelf %}selected="selected"{% endif %}>{{shelfName}} ({{count}})</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span> {{it.c.i18n.shelfOpenTitle|default('Open')}}</button>
+                        </form>
+                    </div>
+                    <!-- Shared shelf name input -->
+                    <div class="btn-group mr-2">
+                        <form class="form-inline">
+                            <label for="shelf-name-input" class="sr-only">{{it.c.i18n.shelfRenameTitle|default('Rename')}}</label>
+                            <input class="form-control" id="shelf-name-input" type="text" name="name" placeholder="{{it.c.i18n.shelfRenamePrompt|default('Enter new shelf name')}}" />
+                        </form>
+                    </div>
+                    <!-- Create -->
+                    <div class="btn-group mr-2">
+                        <form method="post" action="{{it.c.shelfActions.create}}" class="form-inline" onsubmit="return copyShelfName('create-shelf-name', this)">
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <input type="hidden" id="create-shelf-name" name="name" />
+                            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> {{it.c.i18n.shelfNewTitle|default('New')}}</button>
+                        </form>
+                    </div>
+                    <!-- Rename -->
+                    <div class="btn-group mr-2">
+                        <form method="post" action="{{it.c.shelfActions.rename}}" class="form-inline" onsubmit="return copyShelfName('rename-shelf-name', this)">
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <input type="hidden" id="rename-shelf-name" name="name" />
+                            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> {{it.c.i18n.shelfRenameTitle|default('Rename')}}</button>
+                        </form>
+                    </div>
+                    <!-- Delete -->
+                    {% if it.shelves|length > 1 %}
+                    <div class="btn-group mr-2">
+                        <form method="post" action="{{it.c.shelfActions.delete}}" class="form-inline">
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> {{it.c.i18n.shelfDeleteTitle|default('Delete')}}</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <!-- Export -->
+                    <div class="btn-group mr-2">
+                        <form method="get" action="{{it.c.shelfActions.export}}" class="form-inline">
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-export"></span> {{it.c.i18n.shelfExportTitle|default('Export')}}</button>
+                        </form>
+                    </div>
+                    <!-- Import -->
+                    <div class="btn-group mr-2">
+                        <form method="post" action="{{it.c.shelfActions.import}}" enctype="multipart/form-data" class="form-inline">
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <label class="sr-only" for="server-shelf-import-file">{{it.c.i18n.shelfImportTitle|default('Import shelf')}}</label>
+                            <input id="server-shelf-import-file" type="file" name="import" accept=".json,application/json" required="required" />
+                            <label class="sr-only" for="server-shelf-import-mode">{{it.c.i18n.shelfImportTitle|default('Import mode')}}</label>
+                            <select class="form-control" id="server-shelf-import-mode" name="mode">
+                                <option value="merge">{{it.c.i18n.shelfImportMerge|default('Merge')}}</option>
+                                <option value="replace">{{it.c.i18n.shelfImportReplace|default('Replace')}}</option>
+                                <option value="new">{{it.c.i18n.shelfImportNew|default('New shelf')}}</option>
+                            </select>
+                            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-import"></span> {{it.c.i18n.shelfImportTitle|default('Import')}}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>{{it.c.i18n.shelfBooksInTitle|default('Books in shelf')}}: {{it.activeShelf|escape}} <span id="server-shelf-total" class="badge">{{it.totalNumber}}</span></h2>
+        {% if it.entries|length == 0 %}
+        <p class="text-muted">{{it.c.i18n.shelfEmptyTitle|default('This shelf is empty.')}}</p>
+        {% else %}
+        <div class="row d-flex" id="server-shelf-book-list">
+            {% for entry in it.entries %}
+            <div class="col-lg-2 col-sm-3 col-xs-6 books server-shelf-item">
+                <div class="cover-image">
+                    {% if entry.thumbnailurl %}
+                    <a href="{{entry.book.detailurl}}#cover"><img class="img-responsive" src="{{entry.thumbnailurl}}" alt="{{entry.title|escape}}" /></a>
+                    {% endif %}
+                </div>
+                <div class="meta">
+                    <p class="title ellipsis"><a href="{{entry.book.detailurl}}#cover">{{entry.title|escape}}</a></p>
+                    <div class="author ellipsis">{{entry.book.authorsName|escape}}</div>
+                    {% if entry.book.seriesName != "" %}<div class="series ellipsis"><a href="{{entry.book.seriesurl}}">{{entry.book.seriesName|escape}}</a> ({{entry.book.seriesIndex}})</div>{% endif %}
+                </div>
+                <div style="height: 40px;"><!-- reserve space for bottom download button --></div>
+                <div class="download bottom">
+                    <div class="btn-toolbar" role="toolbar" aria-label="{{ it.c.i18n.bookActionsTitle|default('Book actions') }}">
+                        {% for data in entry.book.preferedData %}
+                        <a class="btn btn-primary btn-sm" href="{{data.url}}" data-link="direct" title="{{data.name}} {{data.size}}">{{data.name}}</a>
+                        {% endfor %}
+                        <form method="post" action="{{entry.book.toggleurl}}" class="server-shelf-toggle-form" data-remove-on-toggle="true">
+                            <input type="hidden" name="id" value="{{entry.book.id}}" />
+                            <input type="hidden" name="db" value="{{entry.book.databaseId}}" />
+                            <input type="hidden" name="shelf" value="{{it.activeShelf}}" />
+                            <input type="hidden" name="return" value="{{it.serverShelfReturnUrl}}" />
+                            <button type="submit" class="btn btn-sm btn-danger server-shelf-toggle" aria-pressed="true" title="{{it.c.i18n.shelfRemoveTitle|default('Remove from Shelf')}}"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span><span class="sr-only">{{it.c.i18n.shelfRemoveTitle|default('Remove from Shelf')}}</span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if it.isPaginated == 1 %}
+        <ul id="pager" class="pager">
+            <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
+            <li>{{it.currentPage}} / {{it.maxPage}}</li>
+            <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        </ul>
+        {% endif %}
+    </section>
+    {% elseif it.c.config.use_client_shelves %}
     <div id="shelf-page-content">
         <!-- Dynamically filled by ShelfManager -->
     </div>
+    {% endif %}
 </div>
 {% endblock main %}

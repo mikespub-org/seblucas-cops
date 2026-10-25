@@ -39,6 +39,64 @@ function postRefresh()
     }
 }
 
+// use namespaced event here
+$(document).off ("submit.serverShelves", ".server-shelf-toggle-form").on ("submit.serverShelves", ".server-shelf-toggle-form", function(e) {
+    e.preventDefault();
+    var form = this;
+    $.ajax ({
+        url      : form.action,
+        type     : 'post',
+        data     : $(form).serialize(),
+        headers  : {
+            'Accept'               : 'application/json',
+            'X-Requested-With'     : 'XMLHttpRequest'
+        },
+        success  : function (result) {
+            if (!result || !result.success) {
+                return;
+            }
+
+            var inShelf = !!result.inShelf;
+            var button = $(form).find('button[type="submit"]');
+            button.attr('aria-pressed', inShelf ? 'true' : 'false');
+            button.removeClass('btn-danger btn-default').addClass(inShelf ? 'btn-danger' : 'btn-default');
+            button.attr('title', getI18n(inShelf ? 'shelfRemoveTitle' : 'shelfAddTitle', inShelf ? 'Remove from Shelf' : 'Add to Shelf'));
+            button.find('.sr-only').text(getI18n(inShelf ? 'shelfRemoveTitle' : 'shelfAddTitle', inShelf ? 'Remove from Shelf' : 'Add to Shelf'));
+
+            if (!inShelf && $(form).attr('data-remove-on-toggle') === 'true') {
+                var item = $(form).closest('.server-shelf-item');
+                item.remove();
+                var count = parseInt($('#server-shelf-total').text(), 10) || 0;
+                $('#server-shelf-total').text(Math.max(0, count - 1));
+            }
+        },
+        error    : function () {
+            // Silent failure: if the toggle request fails, the button state is left unchanged.
+        }
+    });
+});
+
+// Enhance the server shelf selector: navigate via AJAX when the selected shelf changes
+$(document).off("change.serverShelves", "#server-shelf-select").on("change.serverShelves", "#server-shelf-select", function () {
+    if (typeof currentData === 'undefined' || !currentData.shelvesurl || typeof navigateTo !== 'function') {
+        return;
+    }
+    navigateTo(currentData.shelvesurl + '?shelf=' + encodeURIComponent($(this).val()));
+});
+
+// Copy shared shelf-name input into the hidden field of create/rename forms before submit
+function copyShelfName(targetId, form) {
+    var source = document.getElementById('shelf-name-input');
+    var target = document.getElementById(targetId);
+    if (source && target) {
+        target.value = source.value;
+        if (!target.value) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function getComicImages(url) {
     $.getJSON(url, function(data) {
         var gallery = document.getElementById('image-gallery');

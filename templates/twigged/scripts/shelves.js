@@ -84,9 +84,9 @@ $(document).ready(function() {
             html += '<button type="button" class="btn btn-info" id="shelf-rename-btn" title="' + getI18n('shelfRenameTitle', 'Rename') + '">' +
                     '<span class="glyphicon glyphicon-pencil"></span> ' + getI18n('shelfRenameTitle', 'Rename') + '</button> ' +
                     '<button type="button" class="btn btn-success btn-sm" id="shelf-export-btn" title="' + getI18n('shelfExportTitle', 'Export') + '">' +
-                    '<span class="glyphicon glyphicon-download"></span> ' + getI18n('shelfExportTitle', 'Export') + '</button> ' +
+                    '<span class="glyphicon glyphicon-export"></span> ' + getI18n('shelfExportTitle', 'Export') + '</button> ' +
                     '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
-                    '<span class="glyphicon glyphicon-upload"></span> ' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
+                    '<span class="glyphicon glyphicon-import"></span> ' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
                     '<button type="button" class="btn btn-warning btn-sm" id="shelf-share-btn" title="' + getI18n('shelfShareTitle', 'Share shelf') + '">' +
                     '<span class="glyphicon glyphicon-qrcode"></span> ' + getI18n('shelfShareTitle', 'Share') + '</button> ' +
                     '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
