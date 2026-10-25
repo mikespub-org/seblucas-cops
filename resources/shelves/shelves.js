@@ -807,7 +807,7 @@ var ShelfManager = (function() {
         if (renameBtn) {
             renameBtn.addEventListener('click', function() {
                 var oldName = getActiveShelfName();
-                var newName = prompt(getI18n('shelfRenamePrompt', 'Enter new shelf name:'), oldName);
+                var newName = prompt(getI18n('shelfRenamePrompt', 'Enter new shelf name'), oldName);
                 if (newName && newName.trim() && newName.trim() !== oldName) {
                     if (renameShelf(oldName, newName.trim())) {
                         refreshShelfPage();

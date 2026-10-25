@@ -216,6 +216,15 @@ class Book
     /* Other class (author, series, tag, ...) initialization and accessors */
 
     /**
+     * Summary of getTitleSort
+     * @return string
+     */
+    public function getTitleSort()
+    {
+        return Normalizer::getTitleSort($this->title);
+    }
+
+    /**
      * @param int $n
      * @param ?string $sort
      * @return ?array<Author>
@@ -753,7 +762,7 @@ class Book
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
             $author->setHandler($this->handler);
-            $href = fn() => $author->getUri();
+            $href = fn() => $author->getUri($params);
             array_push(
                 $linkArray,
                 new LinkFeed(
@@ -768,7 +777,7 @@ class Book
         $serie = $this->getSerie();
         if (!empty($serie)) {
             $serie->setHandler($this->handler);
-            $href = fn() => $serie->getUri();
+            $href = fn() => $serie->getUri($params);
             array_push(
                 $linkArray,
                 new LinkFeed(

@@ -25,7 +25,8 @@ class BookShelf extends Base
     public const PAGE_ALL = PageId::ALL_SHELVES;
     public const PAGE_DETAIL = PageId::SHELF_DETAIL;
     public const ROUTE_ALL = "page-shelves";
-    public const ROUTE_DETAIL = "page-shelf";
+    public const ROUTE_DETAIL = "page-shelves";
+    public const ROUTE_ACTION = "shelves-action";
     public const URL_PARAM = "shelf";
 
     public const DEFAULT_SHELF = "Favorites";
@@ -62,7 +63,7 @@ class BookShelf extends Base
             $this->request = $requestOrPost;
             $this->config = $requestOrPost->getConfig();
             $this->dbContext = $dbContext;
-            $this->databaseId = $dbContext?->getDatabase() ?? null;
+            $this->databaseId = $dbContext?->getDatabase() ?? $this->request->database();
         } elseif ($requestOrPost instanceof \stdClass) {
             parent::__construct($requestOrPost, $dbContext);
         } else {
@@ -70,6 +71,17 @@ class BookShelf extends Base
             $this->databaseId = $dbContext?->getDatabase() ?? null;
             $this->config = $dbContext?->getConfig() ?? null;
         }
+    }
+
+    /**
+     * Summary of getUri
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getUri($params = [])
+    {
+        $params['shelf'] = $this->activeShelf;
+        return $this->getRoute(static::ROUTE_DETAIL, $params);
     }
 
     public function setRequest(Request $request): void
@@ -105,7 +117,7 @@ class BookShelf extends Base
      */
     public static function isServerShelvesEnabled($config = null): bool
     {
-        $mode = Config::getFrom($config, 'use_server_shelves') ?? Config::get('use_server_shelves');
+        $mode = Config::getFrom($config, 'use_server_shelves');
         return is_string($mode) && in_array(trim($mode), [self::MODE_SESSION, self::MODE_USER, self::MODE_SHARED], true);
     }
 
@@ -136,7 +148,6 @@ class BookShelf extends Base
     {
         return $this->config('server_id')
             ?? $this->request?->server('SERVER_NAME')
-            ?? $_SERVER['SERVER_NAME']
             ?? 'cops';
     }
 
@@ -146,11 +157,7 @@ class BookShelf extends Base
     public function getUserIdentifier(): ?string
     {
         $user = $this->request?->getUserName()
-            ?? $this->request?->server('PHP_AUTH_USER')
-            ?? $this->request?->server('REMOTE_USER')
             ?? $this->request?->getSession()?->get('user')
-            ?? $_SERVER['PHP_AUTH_USER']
-            ?? $_SERVER['REMOTE_USER']
             ?? null;
 
         return !empty($user) ? (string) $user : null;
@@ -162,11 +169,8 @@ class BookShelf extends Base
     public function getSessionIdentifier(): ?string
     {
         $session = $this->request?->getSession();
-        if ($session && $session->getId()) {
+        if ($session) {
             return $session->getId();
-        }
-        if (function_exists('session_id') && session_id()) {
-            return session_id();
         }
         return null;
     }

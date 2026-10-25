@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Calibre\VirtualLibrary;
 
 class PageCustomize extends Page
@@ -133,6 +134,10 @@ class PageCustomize extends Page
         if (isset($fancybox)) {
             $custom['use_fancyapps'] = $fancybox ? true : false;
         }
+        $stickyShelfLinks = $this->request->post('sticky_shelf_links');
+        if (isset($stickyShelfLinks)) {
+            $custom['sticky_shelf_links'] = $stickyShelfLinks ? true : false;
+        }
         $client_shelves = $this->request->post('use_client_shelves');
         if (isset($client_shelves)) {
             $custom['use_client_shelves'] = $client_shelves ? true : false;
@@ -246,8 +251,13 @@ class PageCustomize extends Page
             $this->addHeaderEntry($title, $content);
         }
 
-        // Enable client-side virtual shelves in supported templates with client side rendering
-        if (!$this->request->render() && in_array($this->request->template(), ['twigged', 'bootstrap2', 'bootstrap5'])) {
+        // Enable server-side or client-side virtual shelves in supported templates
+        $useServerShelves = BookShelf::isServerShelvesEnabled($this->request->getConfig());
+        if ($useServerShelves) {
+            $title = $this->localize("customize.sticky_shelf_links");
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="sticky_shelf_links" name="sticky_shelf_links" ' . $this->isChecked("sticky_shelf_links") . ' />';
+            $this->addHeaderEntry($title, $content);
+        } elseif (!$this->request->render() && in_array($this->request->template(), ['twigged', 'bootstrap2', 'bootstrap5'])) {
             $title = $this->localize("customize.client_shelves");
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_client_shelves" name="use_client_shelves" ' . $this->isChecked("use_client_shelves") . ' />';
             $this->addHeaderEntry($title, $content);

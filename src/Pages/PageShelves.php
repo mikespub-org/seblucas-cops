@@ -92,10 +92,11 @@ class PageShelves extends Page
         $shelf = $this->getShelfModel();
         $shelf->load();
 
-        $requestedShelf = $this->request->get(BookShelf::URL_PARAM);
+        $requestedShelf = $this->request->get(BookShelf::URL_PARAM, null, '/^[\w -]+$/');
         if (!empty($requestedShelf)) {
             $resolved = $shelf->resolveShelfName($requestedShelf);
             if ($resolved) {
+                $shelf->setActiveShelf($resolved);
                 $this->currentShelf = $resolved;
             }
         }
@@ -151,41 +152,47 @@ class PageShelves extends Page
     protected function sortEntries(array &$entries, array $orderMap): void
     {
         $sort = strtolower(trim($this->sorted ?? 'sort'));
-        $descending = str_ends_with($sort, 'desc');
+        $reverse = str_ends_with($sort, 'desc');
 
         if (str_starts_with($sort, 'title')) {
-            usort($entries, fn($a, $b) => $this->compareTitles($a, $b, $descending));
+            usort($entries, fn($a, $b) => $this->compareTitles($a, $b, $reverse));
         } elseif (str_starts_with($sort, 'author')) {
-            usort($entries, fn($a, $b) => $this->compareAuthors($a, $b, $descending));
+            usort($entries, fn($a, $b) => $this->compareAuthors($a, $b, $reverse));
+        } elseif (str_starts_with($sort, 'timestamp')) {
+            // last added is shown first here
+            $reverse = !str_ends_with($sort, 'asc');
+            usort($entries, fn($a, $b) => $this->compareShelfOrder($a, $b, $orderMap, $reverse));
         } else {
-            usort($entries, fn($a, $b) => $this->compareShelfOrder($a, $b, $orderMap, $descending));
+            usort($entries, fn($a, $b) => $this->compareShelfOrder($a, $b, $orderMap, $reverse));
         }
     }
 
-    private function compareTitles(EntryBook $first, EntryBook $second, bool $descending): int
+    private function compareTitles(EntryBook $first, EntryBook $second, bool $reverse): int
     {
-        $comparison = strcasecmp($first->title ?? '', $second->title ?? '');
-        return $descending ? -$comparison : $comparison;
+        // use title sort here
+        $comparison = strcasecmp($first->book->getTitleSort() ?? '', $second->book->getTitleSort() ?? '');
+        return $reverse ? -$comparison : $comparison;
     }
 
-    private function compareAuthors(EntryBook $first, EntryBook $second, bool $descending): int
+    private function compareAuthors(EntryBook $first, EntryBook $second, bool $reverse): int
     {
-        $authorFirst = $first->book->getAuthorsName() ?: '';
-        $authorSecond = $second->book->getAuthorsName() ?: '';
+        // use authors sort here
+        $authorFirst = $first->book->getAuthorsSort() ?: '';
+        $authorSecond = $second->book->getAuthorsSort() ?: '';
         $comparison = strcasecmp($authorFirst, $authorSecond);
         if ($comparison === 0) {
             $comparison = strcasecmp($first->title ?? '', $second->title ?? '');
         }
-        return $descending ? -$comparison : $comparison;
+        return $reverse ? -$comparison : $comparison;
     }
 
     /** @param array<string, int> $orderMap */
-    private function compareShelfOrder(EntryBook $first, EntryBook $second, array $orderMap, bool $descending): int
+    private function compareShelfOrder(EntryBook $first, EntryBook $second, array $orderMap, bool $reverse): int
     {
         $firstKey = BookShelf::getBookKey(['id' => $first->book->id, 'db' => $first->book->getDatabaseId()]);
         $secondKey = BookShelf::getBookKey(['id' => $second->book->id, 'db' => $second->book->getDatabaseId()]);
         $comparison = ($orderMap[$firstKey] ?? 0) <=> ($orderMap[$secondKey] ?? 0);
-        return $descending ? -$comparison : $comparison;
+        return $reverse ? -$comparison : $comparison;
     }
 
     /**
@@ -218,6 +225,7 @@ class PageShelves extends Page
     public static function getPageI18nMap()
     {
         return [
+            'shelfActionsTitle' => 'shelf.actionsTitle',
             'shelfAddTitle' => 'shelf.addTitle',
             'shelfBooksInTitle' => 'shelf.booksInTitle',
             'shelfCreatePrompt' => 'shelf.createPrompt',
@@ -243,6 +251,7 @@ class PageShelves extends Page
             'shelfImportSuccess' => 'shelf.importSuccess',
             'shelfImportTitle' => 'shelf.importTitle',
             'shelfNewTitle' => 'shelf.newTitle',
+            'shelfOpenTitle' => 'shelf.openTitle',
             'shelfRemoveAlt' => 'shelf.removeAlt',
             'shelfRemoveTitle' => 'shelf.removeTitle',
             'shelfRenameError' => 'shelf.renameError',

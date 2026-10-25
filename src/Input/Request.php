@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Input;
 
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
@@ -472,6 +473,20 @@ class Request
     public function database()
     {
         return $this->getIntOrNull('db');
+    }
+
+    /**
+     * Summary of getBookShelf
+     * @param string $name
+     * @return string|null
+     */
+    public function getBookShelf($name = 'shelf')
+    {
+        if (!BookShelf::isServerShelvesEnabled($this->getConfig())) {
+            return null;
+        }
+        $shelfId = $this->get($name, null, '/^[\w -]+$/');
+        return $shelfId;
     }
 
     /**

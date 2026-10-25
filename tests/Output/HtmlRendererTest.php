@@ -17,6 +17,7 @@ use SebLucas\Cops\Output\TwigTemplate;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JsonRenderer;
@@ -231,5 +232,157 @@ class HtmlRendererTest extends TestCase
 
         $expected = "Alice&#039;s Adventures in Wonderland";
         $this->assertStringContainsString($expected, $output);
+    }
+
+    public function testTwigShelfProvidersAreMutuallyExclusive(): void
+    {
+        Config::set('use_server_shelves', 'shared');
+        $cookie = ['template' => 'twigged', 'use_client_shelves' => '1'];
+        $request = Request::build([], null, ['HTTP_USER_AGENT' => 'Firefox'], null, $cookie);
+
+        $templateData = new HtmlRenderer()->getTemplateData($request);
+        $jsonData = new JsonRenderer()->getJson($request, true);
+
+        $this->assertTrue($templateData['use_server_shelves']);
+        $this->assertFalse($templateData['use_client_shelves']);
+        $this->assertTrue($jsonData['c']['config']['use_server_shelves']);
+        $this->assertFalse($jsonData['c']['config']['use_client_shelves']);
+
+        Config::set('use_server_shelves', '');
+        $clientRequest = Request::build([], null, ['HTTP_USER_AGENT' => 'Firefox'], null, $cookie);
+        $clientTemplateData = new HtmlRenderer()->getTemplateData($clientRequest);
+        $clientJsonData = new JsonRenderer()->getJson($clientRequest, true);
+
+        $this->assertFalse($clientTemplateData['use_server_shelves']);
+        $this->assertTrue($clientTemplateData['use_client_shelves']);
+        $this->assertFalse($clientJsonData['c']['config']['use_server_shelves']);
+        $this->assertTrue($clientJsonData['c']['config']['use_client_shelves']);
+        Config::set('use_server_shelves', '');
+    }
+
+    public function testTwigBookIncludesServerShelfStateAndReturnUrl(): void
+    {
+        $shelvesDirectory = sys_get_temp_dir() . '/cops_test_twig_shelves_' . bin2hex(random_bytes(4)) . '/';
+        mkdir($shelvesDirectory, 0o750, true);
+        Config::set('shelves_directory', $shelvesDirectory);
+        Config::set('use_server_shelves', BookShelf::MODE_SHARED);
+
+        try {
+            $shelf = new BookShelf();
+            $shelf->load();
+            $shelf->addBook(17, 0);
+
+            $request = Request::build(
+                ['page' => PageId::BOOK_DETAIL, 'id' => 17],
+                null,
+                ['HTTP_USER_AGENT' => 'Firefox'],
+                null,
+                ['template' => 'twigged']
+            );
+            $data = new JsonRenderer()->getJson($request, true);
+
+            $this->assertTrue($data['book']['inServerShelf']);
+            $this->assertSame(17, $data['book']['id']);
+            $this->assertSame(0, $data['book']['databaseId']);
+            $this->assertSame('Favorites', $data['book']['shelfname']);
+            $this->assertStringContainsString('/shelves/toggle', $data['book']['toggleurl']);
+            $this->assertStringContainsString('/books/17', $data['book']['returnurl']);
+
+            $template = new TwigTemplate($request);
+            $detailHtml = $template->renderBlock($data, 'bookdetail.html', 'main');
+            $this->assertStringContainsString('server-shelf-toggle-form', $detailHtml);
+            $this->assertStringNotContainsString('shelf-toggle-btn', $detailHtml);
+
+            $listRequest = Request::build(
+                ['page' => PageId::ALL_RECENT_BOOKS],
+                null,
+                ['HTTP_USER_AGENT' => 'Firefox'],
+                null,
+                ['template' => 'twigged']
+            );
+            $listData = new JsonRenderer()->getJson($listRequest, true);
+            $listTemplate = new TwigTemplate($listRequest);
+            $listHtml = $listTemplate->renderBlock($listData, 'booklist.html', 'content');
+            $this->assertStringContainsString('server-shelf-toggle-form', $listHtml);
+            $this->assertStringNotContainsString('shelf-toggle-btn', $listHtml);
+
+            Config::set('use_server_shelves', '');
+            $clientRequest = Request::build(
+                ['page' => PageId::ALL_RECENT_BOOKS],
+                null,
+                ['HTTP_USER_AGENT' => 'Firefox'],
+                null,
+                ['template' => 'twigged', 'use_client_shelves' => '1']
+            );
+            $clientData = new JsonRenderer()->getJson($clientRequest, true);
+            $clientTemplate = new TwigTemplate($clientRequest);
+            $clientHtml = $clientTemplate->renderBlock($clientData, 'booklist.html', 'content');
+            $this->assertStringContainsString('shelf-toggle-btn', $clientHtml);
+            $this->assertStringNotContainsString('server-shelf-toggle-form', $clientHtml);
+        } finally {
+            foreach (glob($shelvesDirectory . '{,.}*', GLOB_BRACE) ?: [] as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($shelvesDirectory);
+            Config::set('use_server_shelves', '');
+        }
+    }
+
+    public function testTwigServerShelfPageRendersFormsInBothModes(): void
+    {
+        $shelvesDirectory = sys_get_temp_dir() . '/cops_test_twig_shelf_page_' . bin2hex(random_bytes(4)) . '/';
+        mkdir($shelvesDirectory, 0o750, true);
+        Config::set('shelves_directory', $shelvesDirectory);
+        Config::set('use_server_shelves', BookShelf::MODE_SHARED);
+
+        try {
+            $shelf = new BookShelf();
+            $shelf->load();
+            $shelf->createShelf('To Read');
+            $shelf->addBook(17, 0, 'To Read');
+
+            $cookie = ['template' => 'twigged'];
+            $serverRequest = Request::build(
+                ['page' => PageId::SHELVES, 'shelf' => 'To Read'],
+                null,
+                ['HTTP_USER_AGENT' => 'Kindle/1.0'],
+                null,
+                $cookie
+            );
+            $serverData = new JsonRenderer()->getJson($serverRequest, true);
+            $serverHtml = new TwigTemplate($serverRequest)->serverSide($serverData);
+
+            $clientRequest = Request::build(
+                ['page' => PageId::SHELVES, 'shelf' => 'To Read'],
+                null,
+                ['HTTP_USER_AGENT' => 'Firefox'],
+                null,
+                $cookie
+            );
+            $clientData = new JsonRenderer()->getJson($clientRequest, true);
+            $clientTemplate = new TwigTemplate($clientRequest);
+            $clientHtml = $clientTemplate->renderBlock($clientData, 'shelves.html', 'main');
+
+            foreach ([$serverHtml, $clientHtml] as $html) {
+                $this->assertStringContainsString('id="server-shelves"', $html);
+                $this->assertStringContainsString('server-shelf-toggle-form', $html);
+                $this->assertStringContainsString('multipart/form-data', $html);
+                $this->assertStringContainsString('/shelves/export', $html);
+            }
+            $this->assertSame(1, $serverData['totalNumber']);
+            $this->assertSame(1, $clientData['totalNumber']);
+            $this->assertSame('To Read', $serverData['activeShelf']);
+            $this->assertTrue($serverData['entries'][0]['book']['inServerShelf']);
+        } finally {
+            foreach (glob($shelvesDirectory . '{,.}*', GLOB_BRACE) ?: [] as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($shelvesDirectory);
+            Config::set('use_server_shelves', '');
+        }
     }
 }

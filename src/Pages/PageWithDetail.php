@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Calibre\Comment;
 use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
 use SebLucas\Cops\Calibre\Format;
@@ -85,7 +86,11 @@ class PageWithDetail extends Page
         if (!is_array($paging)) {
             $paging = [];
         }
-        // if we want to filter by virtual library etc.
+        // if we want to filter by book shelf, virtual library etc.
+        $shelfId = $this->request->getBookShelf();
+        if (!empty($shelfId)) {
+            $instance->setFilterParams([BookShelf::URL_PARAM => $shelfId]);
+        }
         $libraryId = $this->request->getVirtualLibrary();
         if (!empty($libraryId)) {
             $instance->setFilterParams([VirtualLibrary::URL_PARAM => $libraryId]);

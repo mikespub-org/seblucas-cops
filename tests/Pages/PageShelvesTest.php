@@ -165,7 +165,7 @@ class PageShelvesTest extends TestCase
         $this->assertInstanceOf(EntryBook::class, $page->entryArray[1]);
 
         // Alice's Adventures in Wonderland (17)
-        $this->assertStringContainsString("Alice", $page->entryArray[0]->title);
+        $this->assertStringContainsString("Wonderland", $page->entryArray[0]->title);
         // Through the Looking Glass (6)
         $this->assertStringContainsString("Looking Glass", $page->entryArray[1]->title);
     }
@@ -232,9 +232,10 @@ class PageShelvesTest extends TestCase
         $authorRequest->set('sort', 'author asc');
         /** @var PageShelves $authorPage */
         $authorPage = PageId::getPage(PageId::SHELVES, $authorRequest);
-        $this->assertStringContainsString('Sherlock', $authorPage->entryArray[0]->title);
-        $this->assertStringContainsString('Alice', $authorPage->entryArray[1]->title);
-        $this->assertStringContainsString('Looking Glass', $authorPage->entryArray[2]->title);
+        // Lewis Carroll vs Arthur Conan Doyle (sorted by last name)
+        $this->assertStringContainsString('Wonderland', $authorPage->entryArray[0]->title);
+        $this->assertStringContainsString('Looking Glass', $authorPage->entryArray[1]->title);
+        $this->assertStringContainsString('Sherlock', $authorPage->entryArray[2]->title);
 
         $timestampRequest = new Request();
         $timestampRequest->set('sort', 'timestamp asc');

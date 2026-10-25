@@ -206,10 +206,10 @@ class Filter
             $this->addPubYearFilter($year);
         }
 
-        $shelfId = $this->request->get(BookShelf::URL_PARAM, null, '/^[0-9a-f]+$/');
+        $shelfId = $this->request->get(BookShelf::URL_PARAM, null, '/^[\w -]+$/');
         if (!empty($shelfId)) {
-            // @todo get idlist for shelfId
-            $idlist = BookShelf::getIdListForShelf($shelfId);
+            // get idlist for shelfId
+            $idlist = BookShelf::getIdListForShelf($shelfId, $this->request);
             // Nested form idlist[<db>]=<csv>: only apply the group that
             // belongs to this filter's database context
             $dbId = (int) $this->getDatabaseId();
@@ -711,6 +711,7 @@ class Filter
     {
         $handler = $request->getHandler();
         $locale = $request->locale();
+        $shelfId = $request->getBookShelf();
         $libraryId = $request->getVirtualLibrary();
         $dbContext ??= new DatabaseContext($request->database(), $request->getConfig());
         $entryArray = [];
@@ -754,7 +755,9 @@ class Filter
             if (preg_match('/^!\d+$/', (string) $paramValue)) {
                 $paramValue = substr((string) $paramValue, 1);
             }
-            if (!empty($libraryId)) {
+            if (!empty($shelfId)) {
+                $req = Request::build([$paramName => $paramValue, BookShelf::URL_PARAM => $shelfId], $handler);
+            } elseif (!empty($libraryId)) {
                 $req = Request::build([$paramName => $paramValue, VirtualLibrary::URL_PARAM => $libraryId], $handler);
             } else {
                 $req = Request::build([$paramName => $paramValue], $handler);

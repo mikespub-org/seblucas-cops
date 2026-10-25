@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Calibre\Category;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
@@ -19,7 +20,9 @@ use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
+use SebLucas\Cops\Handlers\PageHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
+use SebLucas\Cops\Handlers\ShelvesHandler;
 use SebLucas\Cops\Handlers\ZipperHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -49,6 +52,8 @@ class JsonRenderer extends BaseRenderer
     protected $homepage;
     /** @var array<string, mixed> */
     protected $extraParams = [];
+    private ?BookShelf $serverShelf = null;
+    private ?string $serverShelfName = null;
 
     /**
      * Summary of getCurrentUrl
@@ -94,7 +99,7 @@ class JsonRenderer extends BaseRenderer
             $author->setHandler($handler);
             array_push($authors, [
                 "name" => $author->name,
-                "url" => $author->getUri(),
+                "url" => $author->getUri($extraParams),
             ]);
         }
 
@@ -109,7 +114,7 @@ class JsonRenderer extends BaseRenderer
             }
             array_push($tags, [
                 "name" => $tagName,
-                "url" => $tag->getUri(),
+                "url" => $tag->getUri($extraParams),
             ]);
         }
 
@@ -120,7 +125,7 @@ class JsonRenderer extends BaseRenderer
         } else {
             $publisher->setHandler($handler);
             $pn = $publisher->name;
-            $pu = $publisher->getUri();
+            $pu = $publisher->getUri($extraParams);
         }
 
         $serie = $book->getSerie();
@@ -137,11 +142,11 @@ class JsonRenderer extends BaseRenderer
                 $sn = $serie->name;
             }
             $scn = str_format($this->localize("content.series.data"), (string) $book->seriesIndex, (string) $serie->name);
-            $su = $serie->getUri();
+            $su = $serie->getUri($extraParams);
         }
         $cc = $book->getCustomColumnValues($this->config('calibre_custom_column_list'), true);
 
-        return [
+        $out = [
             "id" => $book->id,
             "detailurl" => $book->getUri($extraParams),
             "hasCover" => $book->hasCover,
@@ -162,16 +167,19 @@ class JsonRenderer extends BaseRenderer
             "seriesurl" => $su,
             "customcolumns_list" => $cc,
         ];
+        $out = array_merge($out, $this->getServerShelfBookData($book));
+        return $out;
     }
 
     /**
      * @param Book $book
+     * @param array<string, mixed> $extraParams
      * @return array<string, mixed>
      */
-    public function getFullBookContentArray($book)
+    public function getFullBookContentArray($book, $extraParams = [])
     {
         $handler = $book->getHandler();
-        $out = $this->getBookContentArray($book);
+        $out = $this->getBookContentArray($book, $extraParams);
         $database = $book->getDatabaseId() ?? 0;
 
         $cover = new Cover($book);
@@ -270,7 +278,7 @@ class JsonRenderer extends BaseRenderer
             $author->setHandler($handler);
             array_push($out ["authors"], [
                 "name" => $author->name,
-                "url" => $author->getUri(),
+                "url" => $author->getUri($extraParams),
             ]);
         }
         $out ["tags"] = [];
@@ -284,7 +292,7 @@ class JsonRenderer extends BaseRenderer
             }
             array_push($out ["tags"], [
                 "name" => $tagName,
-                "url" => $tag->getUri(),
+                "url" => $tag->getUri($extraParams),
             ]);
         }
         // @todo show prev/next book in series in book detail templates
@@ -297,14 +305,14 @@ class JsonRenderer extends BaseRenderer
             if (!empty($prev)) {
                 $out ["series"]["prev"] = [
                     "title" => $prev->title,
-                    "url" => $prev->book->getUri(),
+                    "url" => $prev->book->getUri($extraParams),
                     "index" => $prev->book->seriesIndex,
                 ];
             }
             if (!empty($next)) {
                 $out ["series"]["next"] = [
                     "title" => $next->title,
-                    "url" => $next->book->getUri(),
+                    "url" => $next->book->getUri($extraParams),
                     "index" => $next->book->seriesIndex,
                 ];
             }
@@ -401,6 +409,8 @@ class JsonRenderer extends BaseRenderer
         $ignoredCategories = ['dummy'];
         $ignoredCategories = array_merge($ignoredCategories, $this->request->option('ignored_categories'));
         $ignoredCategories = array_flip($ignoredCategories);
+        $twigServerShelves = $this->request->template() === 'twigged'
+            && BookShelf::isServerShelvesEnabled($this->getConfig());
 
         $complete = [
             "version" => Config::VERSION,
@@ -464,7 +474,7 @@ class JsonRenderer extends BaseRenderer
             ],
             "config" => [
                 "use_fancyapps" => $this->config('use_fancyapps'),
-                "use_client_shelves" => (!empty($this->request->option('use_client_shelves')) && in_array($this->request->template(), ["twigged", "bootstrap2", "bootstrap5"])) ? true : false,
+                "use_client_shelves" => !$twigServerShelves && !empty($this->request->option('use_client_shelves')) && in_array($this->request->template(), ["twigged", "bootstrap2", "bootstrap5"]),
                 "max_item_per_page" => $this->config('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $this->request->render(),
@@ -473,6 +483,22 @@ class JsonRenderer extends BaseRenderer
                 "random_books" => $this->config('random_books'),
             ],
         ];
+        if ($this->request->template() === 'twigged') {
+            $complete["config"]["use_server_shelves"] = $twigServerShelves;
+            if ($twigServerShelves) {
+                $complete["shelfActions"] = [
+                    "toggle" => ShelvesHandler::link(['action' => 'toggle']),
+                    "add" => ShelvesHandler::link(['action' => 'add']),
+                    "remove" => ShelvesHandler::link(['action' => 'remove']),
+                    "switch" => ShelvesHandler::link(['action' => 'switch']),
+                    "create" => ShelvesHandler::link(['action' => 'create']),
+                    "rename" => ShelvesHandler::link(['action' => 'rename']),
+                    "delete" => ShelvesHandler::link(['action' => 'delete']),
+                    "export" => ShelvesHandler::link(['action' => 'export']),
+                    "import" => ShelvesHandler::link(['action' => 'import']),
+                ];
+            }
+        }
         if ($this->config('thumbnail_handling') == "1") {
             $complete["url"]["thumbnailUrl"] = $complete["url"]["coverUrl"];
         } elseif (!empty($this->config('thumbnail_handling'))) {
@@ -815,6 +841,12 @@ class JsonRenderer extends BaseRenderer
         $entries = [];
         $extraParams = [];
         $out ["isFilterPage"] = false;
+        if ($request->template() === 'twigged' && $currentPage instanceof PageShelves && $currentPage->isServerShelvesEnabled()) {
+            $this->serverShelf = $currentPage->getShelfModel();
+            $this->serverShelfName = $currentPage->currentShelf;
+            // set current shelf in request URL params for other links
+            $request->urlParams['shelf'] ??= $currentPage->currentShelf;
+        }
         if (!empty($request->get('filter')) && !empty($currentPage->filterParams)) {
             // @todo get rid of extraParams as filters should be included in navlink now
             $extraParams = $currentPage->filterParams;
@@ -823,6 +855,12 @@ class JsonRenderer extends BaseRenderer
             $out ["isFilterPage"] = true;
             /** @var \SebLucas\Cops\Pages\PageFilter $currentPage */
             $out ["checked"] = $currentPage->filter;
+        }
+        // set current shelf in extra params for other links
+        $shelfId = $request->getBookShelf();
+        if (!empty($shelfId)) {
+            $out ["shelfId"] = $shelfId;
+            $extraParams['shelf'] ??= $shelfId;
         }
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, $this->getContentArray($entry, $extraParams));
@@ -833,7 +871,11 @@ class JsonRenderer extends BaseRenderer
         }
         if (!is_null($currentPage->book)) {
             // Note: checking 'provide_kepub' is already done in PageBookDetail
-            $out ["book"] = $this->getFullBookContentArray($currentPage->book);
+            if (!empty($extraParams) && $request->option('sticky_shelf_links')) {
+                $out ["book"] = $this->getFullBookContentArray($currentPage->book, $extraParams);
+            } else {
+                $out ["book"] = $this->getFullBookContentArray($currentPage->book);
+            }
         } elseif ($this->page == PageId::BOOK_DETAIL) {
             $this->page = PageId::INDEX;
         }
@@ -871,10 +913,14 @@ class JsonRenderer extends BaseRenderer
             /** @var PageAbout $currentPage */
             $out ["fullhtml"] = $currentPage->getContent();
         } elseif ($this->page == PageId::SHELVES && $currentPage instanceof PageShelves) {
-            if ($currentPage->isServerShelvesEnabled()) {
+            if ($request->template() === 'twigged' && $currentPage->isServerShelvesEnabled()) {
                 $out["activeShelf"] = $currentPage->currentShelf;
                 $out["shelves"] = $currentPage->getShelvesList();
                 $out["use_server_shelves"] = $currentPage->isServerShelvesEnabled();
+                $out["totalNumber"] = $currentPage->totalNumber;
+                $out["serverShelfReturnUrl"] = $this->getRoute(PageId::ROUTE_SHELVES, [
+                    BookShelf::URL_PARAM => $currentPage->currentShelf,
+                ]);
             }
         }
 
@@ -908,11 +954,53 @@ class JsonRenderer extends BaseRenderer
     public function setRequest($request)
     {
         parent::setRequest($request);
+        $this->serverShelf = null;
+        $this->serverShelfName = null;
         $this->database = $request->database();
         // Adapt handler based on $request e.g. for rest api
         $this->setHandler($request->getHandler());
         // Use the configured home page if needed - call after parent::setRequest()
         $this->homepage = PageId::getHomePage($this->getConfig());
         $this->page = $request->get("page", $this->homepage);
+    }
+
+    /**
+     * @param Book $book
+     * @return array<string, mixed>
+     */
+    private function getServerShelfBookData(Book $book): array
+    {
+        if ($this->request?->template() !== 'twigged' || !BookShelf::isServerShelvesEnabled($this->getConfig())) {
+            return [];
+        }
+
+        $shelf = $this->getServerShelf();
+        $databaseId = $book->getDatabaseId() ?? 0;
+        $shelfName = $this->serverShelfName ?? $shelf->getActiveShelfName();
+
+        return [
+            'databaseId' => $databaseId,
+            'shelfname' => $shelfName,
+            'inServerShelf' => $shelf->isInShelf($book->id, $databaseId, $shelfName),
+            'toggleurl' => ShelvesHandler::link(['action' => 'toggle']),
+            'returnurl' => $this->getPageReturnUrl(),
+        ];
+    }
+
+    private function getServerShelf(): BookShelf
+    {
+        if ($this->serverShelf === null) {
+            $dbContext = new DatabaseContext($this->database, $this->getConfig());
+            $this->serverShelf = new BookShelf($this->request, $dbContext);
+            $this->serverShelf->load();
+        }
+        return $this->serverShelf;
+    }
+
+    private function getPageReturnUrl(): string
+    {
+        $params = $this->request->urlParams;
+        unset($params['complete'], $params['return'], $params['action']);
+        return PageHandler::link($params);
     }
 }

@@ -80,7 +80,7 @@ class ShelvesHandlerTest extends TestCase
         );
 
         $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame('vendor/bin/index.php/shelves?shelf=SciFi', $response->getHeader('Location'));
+        $this->assertStringEndsWith('/shelves?shelf=SciFi', $response->getHeader('Location'));
         $this->assertTrue(new BookShelf()->hasShelf('SciFi'));
     }
 
@@ -183,6 +183,27 @@ class ShelvesHandlerTest extends TestCase
             json_decode($response->getContent(), true)
         );
         $this->assertCount(1, new BookShelf()->getBooksInShelf('Imported'));
+    }
+
+    public function testImportUsesRequestedShelfAsTarget(): void
+    {
+        $shelf = new BookShelf();
+        $shelf->load();
+        $shelf->createShelf('To Read');
+
+        $data = json_encode([
+            'activeShelf' => 'Source',
+            'shelves' => ['Source' => [['id' => 19, 'db' => 0]]],
+        ]);
+        $response = $this->handle(
+            ['action' => 'import', 'shelf' => 'To Read', 'mode' => 'merge', 'data' => $data],
+            ['HTTP_ACCEPT' => 'application/json']
+        );
+
+        $this->assertTrue(json_decode($response->getContent(), true)['success']);
+        $stored = new BookShelf();
+        $this->assertCount(1, $stored->getBooksInShelf('To Read'));
+        $this->assertSame([], $stored->getBooksInShelf('Favorites'));
     }
 
     public function testSessionStartsOnlyForSessionStorage(): void

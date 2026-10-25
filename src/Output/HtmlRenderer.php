@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\BookShelf;
 use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -25,6 +26,7 @@ class HtmlRenderer extends BaseRenderer
      */
     public function getTemplateData($request)
     {
+        $useServerShelves = BookShelf::isServerShelvesEnabled($request->getConfig());
         $data = [
             'title'                 => $this->config('title_default'),
             'version'               => Config::VERSION,
@@ -32,7 +34,8 @@ class HtmlRenderer extends BaseRenderer
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
-            'use_client_shelves'    => (!empty($request->option('use_client_shelves')) && in_array($request->template(), ["twigged", "bootstrap2", "bootstrap5"])) ? true : false,
+            'use_server_shelves'    => $useServerShelves,
+            'use_client_shelves'    => !$useServerShelves && !empty($request->option('use_client_shelves')) && in_array($request->template(), ["twigged", "bootstrap2", "bootstrap5"]),
             'current_css'           => $this->getPath($request->style()),
             'favico'                => $this->getPath($this->config('icon')),
             'assets'                => $this->getPath($this->config('assets')),

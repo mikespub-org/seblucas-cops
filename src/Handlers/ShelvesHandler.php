@@ -226,8 +226,13 @@ class ShelvesHandler extends BaseHandler
     private function importShelf(Request $request, BookShelf $shelf): array
     {
         $mode = $request->post('mode') ?? $request->get('mode') ?? 'merge';
-        if (!empty($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $payload = file_get_contents($_FILES['file']['tmp_name']);
+        $shelfName = $this->getShelfParameter($request, $shelf);
+        if ($shelfName !== null) {
+            $shelf->setActiveShelf($shelfName);
+        }
+        $importFile = $request->files('import');
+        if (!empty($importFile['tmp_name']) && is_uploaded_file($importFile['tmp_name'])) {
+            $payload = file_get_contents($importFile['tmp_name']);
         } else {
             $payload = $request->post('data') ?? $request->get('data');
         }
