@@ -409,8 +409,8 @@ class JsonRenderer extends BaseRenderer
         $ignoredCategories = ['dummy'];
         $ignoredCategories = array_merge($ignoredCategories, $this->request->option('ignored_categories'));
         $ignoredCategories = array_flip($ignoredCategories);
-        $twigServerShelves = $this->request->template() === 'twigged'
-            && BookShelf::isServerShelvesEnabled($this->getConfig());
+        $useServerShelves = BookShelf::isServerShelvesEnabled($this->getConfig())
+            && in_array($this->request->template(), ['twigged']);
 
         $complete = [
             "version" => Config::VERSION,
@@ -474,7 +474,7 @@ class JsonRenderer extends BaseRenderer
             ],
             "config" => [
                 "use_fancyapps" => $this->config('use_fancyapps'),
-                "use_client_shelves" => !$twigServerShelves && !empty($this->request->option('use_client_shelves')) && in_array($this->request->template(), ["twigged", "bootstrap2", "bootstrap5"]),
+                "use_client_shelves" => !$useServerShelves && !empty($this->request->option('use_client_shelves')) && in_array($this->request->template(), ["twigged", "bootstrap2", "bootstrap5"]),
                 "max_item_per_page" => $this->config('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $this->request->render(),
@@ -484,8 +484,8 @@ class JsonRenderer extends BaseRenderer
             ],
         ];
         if ($this->request->template() === 'twigged') {
-            $complete["config"]["use_server_shelves"] = $twigServerShelves;
-            if ($twigServerShelves) {
+            $complete["config"]["use_server_shelves"] = $useServerShelves;
+            if ($useServerShelves) {
                 $complete["shelfActions"] = [
                     "toggle" => ShelvesHandler::link(['action' => 'toggle']),
                     "add" => ShelvesHandler::link(['action' => 'add']),

@@ -78,11 +78,11 @@
             "package": {
                 "name": "mozilla/pdfjs-dist",
                 "description": "Legacy build for PDF.js from official release",
-                "version": "6.3.289",
+                "version": "6.4.299",
                 "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website",
                 "license": "Apache-2.0",
                 "dist": {
-                    "url": "https://github.com/mozilla/pdf.js/releases/download/v6.3.289/pdfjs-6.3.289-legacy-dist.zip",
+                    "url": "https://github.com/mozilla/pdf.js/releases/download/v6.4.299/pdfjs-6.4.299-legacy-dist.zip",
                     "type": "zip"
                 }
             }

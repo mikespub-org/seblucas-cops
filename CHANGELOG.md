@@ -6,9 +6,7 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_customize'] for default customize values per user (TODO)
-    - new $config['cops_use_server_shelves'] to use server-side shelves (TODO)
   * Experiment with default customize values per user (TODO)
-  * Experiment with server-side bookshelves (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.8
   * Upgrade npm-asset/jquery 3.7.1 to 4.0.0
 
@@ -16,15 +14,20 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.6.1 - 20261026 Add virtual shelves + fix issues
   * Changes in config/default.php file:
     - new $config['cops_use_client_shelves'] to use client-side shelves
+    - new $config['cops_use_server_shelves'] to use server-side shelves (WIP)
     - new $config['cops_twig_cache_directory'] to cache compiled Twig templates
+  * Experiment with server-side virtual shelves in 'twigged' template (WIP)
   * Add option to cache compiled Twig templates for server-side rendering
   * Use sqlite function to filter queries by book idlist for shelves
   * Add random books option to bootstrap5 menu - see PR #184 from @dunxd
   * Remove 'bootstrap' template in this release - see issue #181 from @mikespub
   * Clean up provide_kepub checks and Ignore_Title.kepub.epub in URLs - see issue #182 from @dunxd
-  * Try client-side virtual shelves (favorites) in supported templates (WIP)
+  * Try client-side virtual shelves (favorites) in supported templates
 
 4.5.4 - 20260917 Add random books + fix issues
   * Changes in config/default.php file:

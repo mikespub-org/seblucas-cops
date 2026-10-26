@@ -1,26 +1,26 @@
-FROM alpine:3.23 AS build
+FROM alpine:3.24 AS build
 RUN apk add --no-cache --upgrade \
-    php84 \
-    php84-dom \
-    php84-gd \
-    php84-intl \
-    php84-pdo_sqlite \
-    php84-xml \
-    php84-zip \
-    php84-phar \
+    php85 \
+    php85-dom \
+    php85-gd \
+    php85-intl \
+    php85-pdo_sqlite \
+    php85-xml \
+    php85-zip \
+    php85-phar \
     composer \
     icu-data-full \
-    php84-ctype \
-    php84-curl \
-    php84-fileinfo \
-    php84-iconv \
-    php84-mbstring \
-    php84-openssl \
-    php84-session \
-    php84-tokenizer \
-    php84-xmlwriter
+    php85-ctype \
+    php85-curl \
+    php85-fileinfo \
+    php85-iconv \
+    php85-mbstring \
+    php85-openssl \
+    php85-session \
+    php85-tokenizer \
+    php85-xmlwriter
 # https://www.dannyvankooten.com/blog/2025/composer-php-version-alpine-linux/
-#RUN sed -i 's/php83/php84/g' /usr/bin/composer
+#RUN sed -i 's/php83/php85/g' /usr/bin/composer
 
 WORKDIR /app
 COPY . /app
@@ -29,7 +29,7 @@ RUN composer install --no-dev -o -d /app
 ENV PORT=80
 EXPOSE $PORT
 
-CMD ["sh", "-c", "php84 -S 0.0.0.0:$PORT -t /app"]
+CMD ["sh", "-c", "php85 -S 0.0.0.0:$PORT -t /app"]
 
 FROM build AS dev-envs
 RUN composer update -o -d /app
