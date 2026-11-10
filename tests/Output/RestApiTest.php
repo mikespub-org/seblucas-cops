@@ -181,28 +181,11 @@ class RestApiTest extends TestCase
         $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $statistics['library_start_date']);
         $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $statistics['latest_book_added_date']);
 
-        foreach (['book_count', 'latest_book_id', 'author_count', 'tag_count'] as $metric) {
-            $request = self::$context->newRequest("/restapi/statistics/$metric");
-            $apiProvider = new RestApiProvider($request);
-            $apiProvider->setContext(self::$context);
-            $result = json_decode($apiProvider->getOutput(), true);
-            $this->assertSame([$metric], array_keys($result));
-            $this->assertIsInt($result[$metric]);
-        }
-
-        $request = self::$context->newRequest("/restapi/statistics/library_start_date");
+        $request = self::$context->newRequest("/restapi/statistics/book_count");
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $result = json_decode($apiProvider->getOutput(), true);
-        $this->assertSame(['library_start_date'], array_keys($result));
-        $this->assertSame($statistics['library_start_date'], $result['library_start_date']);
-
-        $request = self::$context->newRequest("/restapi/statistics/latest_book_added_date");
-        $apiProvider = new RestApiProvider($request);
-        $apiProvider->setContext(self::$context);
-        $result = json_decode($apiProvider->getOutput(), true);
-        $this->assertSame(['latest_book_added_date'], array_keys($result));
-        $this->assertSame($statistics['latest_book_added_date'], $result['latest_book_added_date']);
+        $this->assertSame(['error' => 'Unknown statistic'], $result);
     }
 
     public function testGetDatabase(): void
@@ -285,10 +268,12 @@ class RestApiTest extends TestCase
         $test = self::$apiProvider->getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
         $this->assertArrayHasKey("/statistics", $test["paths"]);
-        $this->assertEquals(['statistics'], $test['paths']['/statistics/book_count']['get']['tags']);
-        $this->assertArrayHasKey('/statistics/latest_book_id', $test['paths']);
-        $this->assertArrayHasKey('/statistics/library_start_date', $test['paths']);
-        $this->assertArrayHasKey('/statistics/latest_book_added_date', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/book_count', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/latest_book_id', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/author_count', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/tag_count', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/library_start_date', $test['paths']);
+        $this->assertArrayNotHasKey('/statistics/latest_book_added_date', $test['paths']);
 
         $cacheFile = dirname(__DIR__, 2) . '/resources/openapi.json';
         if (file_exists($cacheFile)) {

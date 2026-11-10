@@ -288,6 +288,10 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getStatistics($request)
     {
+        $path = $request->get('path', '');
+        if (!empty($request->get('metric')) || str_starts_with($path, 'statistics/')) {
+            return ["error" => "Unknown statistic"];
+        }
         $dbContext = $this->getRequestDbContext($request);
         $bookList = new BookList($request, $dbContext);
         $statistics = [
@@ -298,16 +302,6 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "library_start_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', min(timestamp)) from books"),
             "latest_book_added_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', max(timestamp)) from books"),
         ];
-        $metric = $request->get('metric');
-        if (empty($metric)) {
-            $path = $request->get('path', '');
-            if (str_starts_with($path, 'statistics/')) {
-                $metric = substr($path, strlen('statistics/'));
-            }
-        }
-        if (!empty($metric)) {
-            return isset($statistics[$metric]) ? [$metric => $statistics[$metric]] : ["error" => "Unknown statistic"];
-        }
         return $statistics;
     }
 
