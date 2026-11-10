@@ -49,12 +49,6 @@ class OpenApi
                 "title" => "COPS REST API",
                 "version" => Config::VERSION,
             ],
-            "tags" => [
-                [
-                    "name" => "statistics",
-                    "description" => "Statistics for the selected library",
-                ],
-            ],
         ];
     }
 

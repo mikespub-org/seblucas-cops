@@ -51,7 +51,7 @@ class RestApiHandler extends BaseHandler
             "restapi-database-table" => [self::PREFIX . "/databases/{db:\d+}/{name:\w+}", [self::RESOURCE => "Database"], ["GET", "POST"]],
             "restapi-database" => [self::PREFIX . "/databases/{db:\d+}", [self::RESOURCE => "Database"]],
             "restapi-databases" => [self::PREFIX . "/databases", [self::RESOURCE => "Database"]],
-            "restapi-statistics" => [self::PREFIX . "/statistics", [self::RESOURCE => "statistics"], ["GET"], ["openapi_tag" => "statistics"]],
+            "restapi-statistics" => [self::PREFIX . "/statistics", [self::RESOURCE => "statistics"], ["GET"], ["openapi_tag" => "default"]],
             "restapi-openapi" => [self::PREFIX . "/openapi", [self::RESOURCE => "openapi"]],
             "restapi-route" => [self::PREFIX . "/routes", [self::RESOURCE => "route"]],
             "restapi-handler" => [self::PREFIX . "/handlers", [self::RESOURCE => "handler"]],

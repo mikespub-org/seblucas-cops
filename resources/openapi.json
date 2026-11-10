@@ -4,12 +4,6 @@
         "title": "COPS REST API",
         "version": "4.6.1"
     },
-    "tags": [
-        {
-            "name": "statistics",
-            "description": "Statistics for the selected library"
-        }
-    ],
     "servers": [
         {
             "url": "vendor/bin/index.php/restapi",
@@ -2269,7 +2263,7 @@
                 "summary": "Route to statistics api",
                 "operationId": "get_restapi-statistics",
                 "tags": [
-                    "statistics"
+                    "default"
                 ],
                 "responses": {
                     "200": {
