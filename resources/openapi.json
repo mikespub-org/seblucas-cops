@@ -2258,6 +2258,25 @@
                 }
             }
         },
+        "/statistics": {
+            "get": {
+                "summary": "Route to statistics api",
+                "operationId": "get_restapi-statistics",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/openapi": {
             "get": {
                 "summary": "Route to openapi api",

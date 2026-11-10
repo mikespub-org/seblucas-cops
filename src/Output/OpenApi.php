@@ -181,6 +181,9 @@ class OpenApi
             }
             $operationId = $method . '_' . $name;
             $operation = $this->getOperation($queryString, $operationId, $handler);
+            if (!empty($options['openapi_tag'])) {
+                $operation['tags'] = [$options['openapi_tag']];
+            }
             if (!empty($params)) {
                 $operation["parameters"] = $params;
             }
