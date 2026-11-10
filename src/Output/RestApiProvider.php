@@ -294,9 +294,11 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $dbContext = $this->getRequestDbContext($request);
         $bookList = new BookList($request, $dbContext);
+        $randomBookId = $dbContext->querySingle('select id from books order by random() limit 1');
         $statistics = [
             "book_count" => $bookList->getBookCount(),
             "latest_book_id" => (int) $dbContext->querySingle('select coalesce(max(id), 0) from books'),
+            "random_book_id" => $randomBookId === false ? null : (int) $randomBookId,
             "author_count" => (int) $dbContext->querySingle('select count(*) from authors'),
             "tag_count" => (int) $dbContext->querySingle('select count(*) from tags'),
             "library_start_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', min(timestamp)) from books"),

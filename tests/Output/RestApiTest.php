@@ -177,7 +177,9 @@ class RestApiTest extends TestCase
 
         $statistics = json_decode($apiProvider->getOutput(), true);
         $this->assertSame(16, $statistics['book_count']);
-        $this->assertSame(['book_count', 'latest_book_id', 'author_count', 'tag_count', 'library_start_date', 'latest_book_added_date'], array_keys($statistics));
+        $this->assertSame(['book_count', 'latest_book_id', 'random_book_id', 'author_count', 'tag_count', 'library_start_date', 'latest_book_added_date'], array_keys($statistics));
+        $this->assertIsInt($statistics['random_book_id']);
+        $this->assertGreaterThan(0, $statistics['random_book_id']);
         $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $statistics['library_start_date']);
         $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $statistics['latest_book_added_date']);
 
