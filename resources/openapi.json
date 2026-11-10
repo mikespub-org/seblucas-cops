@@ -4,6 +4,12 @@
         "title": "COPS REST API",
         "version": "4.6.1"
     },
+    "tags": [
+        {
+            "name": "statistics",
+            "description": "Statistics for the selected library"
+        }
+    ],
     "servers": [
         {
             "url": "vendor/bin/index.php/restapi",
@@ -2256,6 +2262,139 @@
                         "description": "Result of databases api"
                     }
                 }
+            }
+        },
+        "/statistics": {
+            "get": {
+                "summary": "Route to statistics api",
+                "operationId": "get_restapi-statistics",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/book_count": {
+            "get": {
+                "summary": "Route to statistics/book_count api",
+                "operationId": "get_restapi-statistics-book-count",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/book_count api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/latest_book_id": {
+            "get": {
+            "summary": "Route to statistics/latest_book_id api",
+            "operationId": "get_restapi-statistics-latest-book-id",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/latest_book_id api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/author_count": {
+            "get": {
+                "summary": "Route to statistics/author_count api",
+                "operationId": "get_restapi-statistics-author-count",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/author_count api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/tag_count": {
+            "get": {
+                "summary": "Route to statistics/tag_count api",
+                "operationId": "get_restapi-statistics-tag-count",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/tag_count api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/library_start_date": {
+            "get": {
+            "summary": "Route to statistics/library_start_date api",
+            "operationId": "get_restapi-statistics-library-start-date",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/library_start_date api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/statistics/latest_book_added_date": {
+            "get": {
+                "summary": "Route to statistics/latest_book_added_date api",
+                "operationId": "get_restapi-statistics-latest-book-added-date",
+                "tags": [
+                    "statistics"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of statistics/latest_book_added_date api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
             }
         },
         "/openapi": {
