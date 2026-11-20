@@ -14,7 +14,7 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
-  * ...
+  * Add statistics in REST API - see PR #186 from @dunxd
 
 4.6.1 - 20261026 Add virtual shelves + fix issues
   * Changes in config/default.php file:
