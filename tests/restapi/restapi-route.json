@@ -1072,6 +1072,21 @@
             ]
         },
         {
+            "name": "restapi-statistics",
+            "route": [
+                "/restapi/statistics",
+                {
+                    "_resource": "Statistics",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-statistics"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "restapi-openapi",
             "route": [
                 "/restapi/openapi",

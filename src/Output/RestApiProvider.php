@@ -282,31 +282,6 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      * @param Request $request
      * @return array<string, mixed>
      */
-    /**
-     * @param Request $request
-    * @return array<string, int|string|null>
-     */
-    public function getStatistics($request)
-    {
-        $path = $request->get('path', '');
-        if (!empty($request->get('metric')) || str_starts_with($path, 'statistics/')) {
-            return ["error" => "Unknown statistic"];
-        }
-        $dbContext = $this->getRequestDbContext($request);
-        $bookList = new BookList($request, $dbContext);
-        $randomBookId = $dbContext->querySingle('select id from books order by random() limit 1');
-        $statistics = [
-            "book_count" => $bookList->getBookCount(),
-            "latest_book_id" => (int) $dbContext->querySingle('select coalesce(max(id), 0) from books'),
-            "random_book_id" => $randomBookId === false ? null : (int) $randomBookId,
-            "author_count" => (int) $dbContext->querySingle('select count(*) from authors'),
-            "tag_count" => (int) $dbContext->querySingle('select count(*) from tags'),
-            "library_start_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', min(timestamp)) from books"),
-            "latest_book_added_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', max(timestamp)) from books"),
-        ];
-        return $statistics;
-    }
-
     public function getDatabase($database, $request)
     {
         $dbContext = $this->getRequestDbContext($request);
@@ -548,6 +523,27 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             'recordsFiltered' => $filtered,
             'data' => $entries,
         ];
+    }
+
+    /**
+     * Summary of getStatistics
+     * @param Request $request
+     * @return array{"author_count": int, "book_count": int, "latest_book_added_date": mixed, "latest_book_id": int, "library_start_date": mixed, "random_book_id": int|null, "tag_count": int}
+     */
+    public function getStatistics($request)
+    {
+        $dbContext = $this->getRequestDbContext($request);
+        $randomBookId = $dbContext->querySingle('select id from books order by random() limit 1');
+        $statistics = [
+            "book_count" => (int) $dbContext->querySingle('select count(*) from books'),
+            "latest_book_id" => (int) $dbContext->querySingle('select coalesce(max(id), 0) from books'),
+            "random_book_id" => $randomBookId === false ? null : (int) $randomBookId,
+            "author_count" => (int) $dbContext->querySingle('select count(*) from authors'),
+            "tag_count" => (int) $dbContext->querySingle('select count(*) from tags'),
+            "library_start_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', min(timestamp)) from books"),
+            "latest_book_added_date" => $dbContext->querySingle("select strftime('%Y-%m-%dT%H:%M:%SZ', max(timestamp)) from books"),
+        ];
+        return $statistics;
     }
 
     /**

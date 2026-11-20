@@ -56,6 +56,7 @@ $static = [
   '/feed' => 'feed',
   '/restapi/custom' => 'restapi-customtypes',
   '/restapi/databases' => 'restapi-databases',
+  '/restapi/statistics' => 'restapi-statistics',
   '/restapi/openapi' => 'restapi-openapi',
   '/restapi/routes' => 'restapi-route',
   '/restapi/handlers' => 'restapi-handler',
@@ -920,6 +921,18 @@ $routes = [
       '_resource' => 'Database',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
       '_route' => 'restapi-databases',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'restapi-statistics' => [
+    '/restapi/statistics',
+    [
+      '_resource' => 'Statistics',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+      '_route' => 'restapi-statistics',
     ],
     [
       'GET',

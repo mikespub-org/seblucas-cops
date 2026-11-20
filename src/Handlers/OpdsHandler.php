@@ -74,8 +74,8 @@ class OpdsHandler extends BaseHandler
         $opdsRenderer = new OpdsRenderer();
 
         switch ($page) {
-            case PageId::OPENSEARCH :
-            case PageId::SEARCH :
+            case PageId::OPENSEARCH:
+            case PageId::SEARCH:
                 $response = $opdsRenderer->getOpenSearch($request);
                 break;
             default:

@@ -465,6 +465,12 @@
                         "_resource": "Database"
                     }
                 ],
+                "restapi-statistics": [
+                    "/restapi/statistics",
+                    {
+                        "_resource": "Statistics"
+                    }
+                ],
                 "restapi-openapi": [
                     "/restapi/openapi",
                     {

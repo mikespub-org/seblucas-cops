@@ -181,6 +181,7 @@ class OpenApi
             }
             $operationId = $method . '_' . $name;
             $operation = $this->getOperation($queryString, $operationId, $handler);
+            // not used in current handler getRoutes()
             if (!empty($options['openapi_tag'])) {
                 $operation['tags'] = [$options['openapi_tag']];
             }

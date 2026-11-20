@@ -75,8 +75,8 @@ class FeedHandler extends BaseHandler
         $opdsRenderer = new OpdsRenderer($request, $response);
 
         switch ($page) {
-            case PageId::OPENSEARCH :
-            case PageId::SEARCH :
+            case PageId::OPENSEARCH:
+            case PageId::SEARCH:
                 return $response->setContent($opdsRenderer->getOpenSearch($request));
             default:
                 break;

@@ -1,3 +1,9 @@
 {
-    "book_count": 16
+    "book_count": 16,
+    "latest_book_id": 19,
+    "random_book_id": 14,
+    "author_count": 7,
+    "tag_count": 11,
+    "library_start_date": "2012-03-03T19:47:47Z",
+    "latest_book_added_date": "2024-05-18T09:15:14Z"
 }

@@ -2263,7 +2263,7 @@
                 "summary": "Route to statistics api",
                 "operationId": "get_restapi-statistics",
                 "tags": [
-                    "default"
+                    "restapi"
                 ],
                 "responses": {
                     "200": {
